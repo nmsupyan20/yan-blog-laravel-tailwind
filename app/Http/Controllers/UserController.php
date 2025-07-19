@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Requests\UserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -11,30 +13,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    private static $rules = [
-        'name' => ['required', 'alpha:ascii', 'max:75', 'min:1'],
-        'email' => ['required', 'email:rfc,dns', 'max:50', 'min:2'],
-        'username' => ['required', 'max:50', 'min:2'],
-        'password' => ['required', 'confirmed:confirmPassword'],
-        'confirmPassword' => ['required']
-    ];
 
-    private static $error_messages = [
-        'name.required' => 'Nama wajib diisi',
-        'name.alpha' => 'Nama hanya boleh menggunakan huruf',
-        'name.max' => 'Panjang nama maksimal 75 huruf',
-        'name.min' => 'Panjang nama minimal 1 huruf',
-        'email.required' => 'Email wajib diisi',
-        'email.email' => 'Format email tidak valid',
-        'email.max' => 'Panjang email maksimal 50 karakter',
-        'email.min' => 'Panjang email minimal 2 karakter',
-        'username.required' => 'Username wajib diisi',
-        'username.max' => 'Panjang username maksimal 50 karakter',
-        'username.min' => 'Panjang username minimal 2 karakter',
-        'password.required' => 'Password wajib diisi',
-        'password.confirmed' => 'Password tidak sama dengan konfirmasi password',
-        'confirmPassword.required' => 'Konfirmasi password wajib diisi'
-    ];
     public function index()
     {
         $userData = User::paginate(4);
@@ -57,9 +36,9 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $userData = $request->validate(self::$rules, self::$error_messages);
+        $userData = $request->validated();
         $userData['password'] = Hash::make($userData['password']);
         unset($userData['confirmPassword']);
 
@@ -73,9 +52,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        //
+        return view('dashboard.users.show', [
+            'titlePage' => 'User Profile',
+            'user' => $user
+        ]);
     }
 
     /**
@@ -92,26 +74,34 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $updateRules = self::$rules;
-        $updateErrorMessages = self::$error_messages;
-
-        unset($updateRules['confirmPassword'], $updateErrorMessages['confirmPassword.required']);
-
-        if ($request->cekEditPassword == 'ok') {
-            $updateUserData = $request->validate($updateRules, $updateErrorMessages);
-            $updateUserData['password'] = Hash::make($updateUserData['password']);
-        } else {
-            unset($updateRules['password']);
-            unset($updateErrorMessages['password.required'], $updateErrorMessages['password.confirmed']);
-            $updateUserData = $request->validate($updateRules, $updateErrorMessages);
-        }
-
+        $updateUserData = $request->validated();
         if ($user->update($updateUserData)) {
             return $this->successFlashData('users', 'Update user berhasil');
         } else {
             return $this->failedFlashData('users', 'Update user gagal');
+        }
+    }
+
+    public function editPassword(User $user)
+    {
+        return view('dashboard.users.edit-password', [
+            'titlePage' => 'Edit Password',
+            'user' => $user
+        ]);
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request, User $user)
+    {
+        $updatePassword = $request->validated();
+        $updatePassword['password'] = Hash::make($updatePassword['password']);
+        unset($updatePassword['confirmPassword']);
+
+        if ($user->update($updatePassword)) {
+            return $this->successFlashData('users', 'Password user berhasil diupdate');
+        } else {
+            return $this->failedFlashData('users', 'Password user gagal diupdate');
         }
     }
 

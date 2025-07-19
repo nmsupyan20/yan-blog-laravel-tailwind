@@ -3,7 +3,7 @@
     <div class="bg-white w-full mx-auto p-7 rounded-lg">
         <form action="{{ route('users') }}" method="post">
             @csrf
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid sm:grid-cols-2 grid-cols-1 gap-4 mb-4">
                 <div class="flex flex-col gap-y-2">
                     <label for="name">Nama : </label>
                     <input type="text" name="name" id="name" placeholder="Input Your Name" class="bg-purple-50 h-[2.3rem] w-full p-2 rounded-lg border-gray-200 border border-solid shadow-md  @error('name') border-red-400

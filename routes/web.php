@@ -7,7 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LandingController;
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\SettingController;
 
 Route::controller(LandingController::class)->group(function () {
     Route::get('/', 'index')->name('home');
@@ -42,6 +42,9 @@ Route::prefix('posts')->middleware('auth')->controller(PostController::class)->g
     Route::get('/create',  'create')->name('posts.create');
     Route::post('/', 'store')->name('posts.store');
     Route::get('/{post}', 'show')->name('posts.show');
+    Route::get('/{post}/edit', 'edit')->name('posts.edit');
+    Route::put('/{post}', 'update')->name('posts.update');
+    Route::delete('/{post}', 'destroy');
 });
 
 
@@ -50,10 +53,14 @@ Route::prefix('users')->middleware('auth')->controller(UserController::class)->g
     Route::get('/', 'index')->name('users');
     Route::get('/create', 'create')->name('users.create');
     Route::post('/', 'store')->name('users.store');
+    Route::get('/{user}', 'show')->name('users.show');
     Route::get('/{user}/edit', 'edit')->name('users.edit');
     Route::put('/{user}', 'update')->name('users.update');
     Route::delete('/{user}', 'destroy')->name('users.destroy');
+    Route::get('/{user}/password', 'editPassword')->name('user.editPassword');
+    Route::put('/{user}/updatePassword', 'updatePassword')->name('users.updatePassword');
 });
 
-
-Route::get('/test', [TestController::class, 'index']);
+Route::prefix('settings')->middleware('auth')->controller(SettingController::class)->group(function () {
+    Route::get('/', 'index');
+});

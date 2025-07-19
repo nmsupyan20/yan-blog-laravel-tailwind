@@ -1,6 +1,6 @@
 <x-dashboard.dashboard>
     <x-slot:titlePage> {{ $titlePage }} </x-slot:titlePage>
-    <div class="bg-white w-2/3 mx-auto p-7 rounded-lg m">
+    <div class="bg-white w-full lg:w-2/3 mx-auto p-7 rounded-lg">
         <form action="{{ route('categories') }}" method="post">
             @csrf
             <div class="flex flex-col gap-y-2 mb-4">

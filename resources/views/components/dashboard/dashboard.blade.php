@@ -25,7 +25,7 @@
                     <h1 class="font-bold text-yellow-400 text-xl">Yan Blog</h1>
                     <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar"
                         aria-controls="logo-sidebar" type="button"
-                        class="inline-flex items-center p-2 text-sm text-yellow-400 hover:text-purple-800 ring-2 ring-yellow-400 hover:ring-gray-200 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-black">
+                        class="inline-flex items-center p-2 text-sm text-yellow-400 hover:text-purple-800 ring-2 ring-yellow-400 hover:ring-gray-200 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-black">
                         <i data-feather="menu"></i>
                     </button>
                 </div>
@@ -35,7 +35,7 @@
     {{-- Akhir bagian navbar --}}
 
     <aside id="logo-sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 lg:translate-x-0"
         aria-label="Sidebar">
         <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
             <ul class="space-y-2 font-medium">
@@ -78,7 +78,7 @@
         </div>
     </aside>
 
-    <div class="p-4 sm:ml-64">
+    <div class="p-4 lg:ml-64">
         <div class="p-3 border-2 border-gray-200 bg-white border-solid rounded-lg mt-14 mb-5">
             <h1 class="text-gray-900 font-bold text-lg"> {{ $titlePage }} </h1>
         </div>

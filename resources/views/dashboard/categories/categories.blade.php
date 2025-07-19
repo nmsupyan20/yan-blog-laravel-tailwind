@@ -25,41 +25,63 @@
 
     <div class="table-wrapper overflow-x-auto mt-4 shadow-md rounded-lg">
         @php
-            $titleTables = ["No.", "Name", "Created By", "Created At", "Updated At", "Action"]    
+            $titleTables = ["No.", "Name", "Created By", "Action"]    
         @endphp
 
-        <table class="w-full border-solid border border-purple-100">
-            <tr>
-                @foreach ($titleTables as $titleTable)
-                    <th class="border-solid border border-gray-100 p-2 bg-purple-900 text-yellow-400">
-                        {{ $titleTable }}
-                    </th>
-                @endforeach
-            </tr>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-md text-left rtl:text-right text-black">
+                {{-- Head Table --}}
+                <thead class="text-sm sm:text-md text-yellow-400 uppercase bg-purple-800">
+                    <tr>
+                        @foreach ($titleTables as $titleTable)
+                            <th scope="col" class="px-6 py-3">
+                                {{ $titleTable }}
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                {{-- Akhir dari head table --}}
 
-            @php
-                $no = 1;
-            @endphp
-            @foreach ($categories as $key => $category)
-                <tr class="bg-white text-center border-b border-gray-100 border-solid shadow-sm">
-                    <td class="p-3"> {{ $categories->firstItem() + $key }}. </td>
-                    <td class="p-3"> {{ $category->name }} </td>
-                    <td class="p-3"> {{ $category->user->name }} </td>
-                    <td class="p-3"> {{ $category->created_at }} </td>
-                    <td class="p-3"> {{ $category->updated_at }} </td>
-                    <td class="p-3">
-                        <a href="/categories/{{ $category->id }}/edit"
-                            class="bg-yellow-400 text-black py-2 px-3 rounded-lg">Edit</a>
-                        <form action="/categories/{{ $category->id }}" method="post" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white py-2 px-3 rounded-lg" name="delete"
-                                onclick="return confirm('Anda yakin mau menghapus kategori ini?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </table>
+                {{-- Body Table --}}
+                <tbody>
+                    @foreach ($categories as $key => $category)
+                        <tr class="bg-white border-b border-gray-200 hover:bg-purple-100">
+                            <td class="px-6 py-4">
+                                {{ $categories->firstItem() + $key }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $category->name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $category->user->name }}
+                            </td>
+
+                            {{-- Tombol aksi edit dan delete --}}
+                            <td class="px-6 py-4 text-right flex items-center gap-1">
+                                {{-- Tombol edit --}}
+                                <a href="/categories/{{ $category->id }}/edit"
+                                    class="text-black bg-yellow-400 hover:bg-yellow-300 rounded-lg text-sm px-5 py-2.5">
+                                    <i data-feather="edit" class="size-[1rem]"></i>
+                                </a>
+                                {{-- Tombol delete --}}
+                                <form class="inline" method="post" action="/categories/{{ $category->id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-white bg-red-500 hover:bg-red-600 rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
+                                        onclick="return confirm('Apakah anda yakin ingin menghapus kategori ini?')">
+                                        <i data-feather="trash" class="size-[1rem]"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </tbody>
+                {{-- Akhir dari body table --}}
+            </table>
+        </div>
+
         {{ $categories->links() }}
     </div>
 </x-dashboard.dashboard>

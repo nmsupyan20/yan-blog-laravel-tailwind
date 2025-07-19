@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
@@ -12,20 +12,8 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      */
 
-    static $rules = [
-        'name' => ['required', 'alpha:ascii', 'max:20', 'min:3']
-    ];
-
-    static $error_messages = [
-        'name.required' => 'Nama kategori wajib diisi',
-        'name.alpha' => 'Nama kategori hanya boleh huruf',
-        'name.max' => 'Panjang nama kategori maximal 20 huruf',
-        'name.min' => 'Panjang nama kategori minimal 3 huruf'
-    ];
-
     public function index()
     {
-
         $categories = Category::paginate(4);
         return view('dashboard.categories.categories', [
             'titlePage' => 'Categories',
@@ -46,9 +34,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $categoryData = $request->validate(self::$rules, self::$error_messages);
+        $categoryData = $request->validated();
         $categoryData['user_id'] = Auth::user()->id;
 
         if (Category::create($categoryData)) {
@@ -72,9 +60,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        $UpdatedCategoryData = $request->validate(self::$rules, self::$error_messages);
+        $UpdatedCategoryData = $request->validated();
         if ($category->update($UpdatedCategoryData)) {
             return $this->successFlashData('categories', 'Kategori berhasil diupdate');
         } else {

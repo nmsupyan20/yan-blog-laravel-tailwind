@@ -34,8 +34,8 @@
                     <li>
                         <a href="/posts"
                             class="flex items-center gap-x-2 w-full py-2 px-3 text-yellow-400 rounded-sm hover:bg-yellow-400 hover:text-purple-800 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0">
-                            <i data-feather="file-text"></i>
-                            <span>Posts</span>
+                            <i data-feather="home"></i>
+                            <span>Home</span>
                         </a>
                     </li>
                     <li>

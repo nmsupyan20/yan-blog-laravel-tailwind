@@ -7,20 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
-    private static $rules = [
-        'title' => ['required', 'max:50', 'min:5'],
-        'image' => ['file', 'image', 'max:2050', 'extensions:jpg,png,jpeg'],
-        'category_id' => ['required'],
-        'content' => ['required']
-    ];
-
     public function index()
     {
         $posts = Post::paginate(5);
@@ -45,19 +40,19 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $postData = $request->validate(self::$rules);
+        $postData = $request->validated();
         $postData['user_id'] = Auth::id();
         $postData['content'] = Purifier::clean($postData['content']);
 
-        if ($request->hasFile('image')) {
-            $postData['image'] = $request->file('image')->store('posts');
-        } else {
-            $postData['image'] = null;
-        }
+        $file = $request->file('image');
+
+        $imageName = $file->hashName();
+        $postData['image'] = $imageName;
 
         if (Post::create($postData)) {
+            $file->storeAs('posts', $imageName);
             return $this->successFlashData('posts', 'Post baru berhasil dibuat');
         } else {
             return $this->failedFlashData('posts', 'Post baru gagal dibuat');
@@ -80,15 +75,38 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::all();
+        return view('dashboard.posts.edit', [
+            'titlePage' => 'Edit Post',
+            'post' => $post,
+            'categories' => $categories
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $updatePost = $request->validated();
+        $updatePost['content'] = Purifier::clean($updatePost['content']);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = $file->hashName();
+            $updatePost['image'] = $filename;
+            $file->storeAs('posts', $filename);
+
+            if (Storage::exists('posts/' . $post->image)) {
+                Storage::delete('posts/' . $post->image);
+            }
+        }
+
+        if ($post->update($updatePost)) {
+            return $this->successFlashData('posts', 'Postingan berhasil diupdate');
+        } else {
+            return $this->failedFlashData('posts', 'Postingan gagal diupdate');
+        }
     }
 
     /**
@@ -96,6 +114,13 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $filepath = 'posts/' . $post->image;
+
+        if (Storage::exists($filepath)) {
+            Storage::delete($filepath);
+        }
+
+        $post->delete();
+        return $this->successFlashData('posts', 'Postingan berhasil dihapus');
     }
 }

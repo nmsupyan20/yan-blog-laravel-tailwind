@@ -25,39 +25,63 @@
 
     <div class="table-wrapper overflow-x-auto mt-4 shadow-md">
         @php
-            $titleTables = ["No.", "title", "Author", "Category", "Created_at", "Updated_at", "Action"]    
+            $titleTables = ["No.", "title", "Author", "Category", "Action"]    
         @endphp
 
-        <table class="w-full border-solid border border-purple-100">
-            <tr>
-                @foreach ($titleTables as $titleTable)
-                    <th class="border-solid border border-gray-100 p-2 bg-purple-900 text-yellow-400">
-                        {{ $titleTable }}
-                    </th>
-                @endforeach
-            </tr>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-md text-left rtl:text-right text-black">
+                {{-- Head Table --}}
+                <thead class="text-sm sm:text-md text-yellow-400 uppercase bg-purple-800">
+                    <tr>
+                        @foreach ($titleTables as $titleTable)
+                            <th scope="col" class="px-6 py-3">
+                                {{ $titleTable }}
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                {{-- Akhir dari head table --}}
 
-            @foreach ($posts as $key => $post)
-                <tr class="bg-white text-center border-b border-gray-100 border-solid shadow-sm">
-                    <td class="p-3"> {{ $posts->firstItem() + $key }}. </td>
-                    <td class="p-3"> {{ $post->title }} </td>
-                    <td class="p-3"> {{ $post->user->name }} </td>
-                    <td class="p-3"> {{ $post->category->name }} </td>
-                    <td class="p-3"> {{ $post->created_at }} </td>
-                    <td class="p-3"> {{ $post->updated_at }} </td>
-                    <td class="p-3">
-                        <a href="/posts/{{ $post->id }}" class="bg-purple-800 text-yellow-400 py-2 px-3 rounded-lg">Show</a>
-                        <a href="/posts/{{ $post->id }}/edit" class="bg-yellow-400 text-black py-2 px-3 rounded-lg">Edit</a>
-                        <form action="/categories/{{ $post->id }}" method="post" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white py-2 px-3 rounded-lg" name="delete"
-                                onclick="return confirm('Anda yakin mau menghapus kategori ini?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
+                {{-- Body Table --}}
+                <tbody>
+                    @foreach ($posts as $key => $post)
+                        <tr class="bg-white border-b border-gray-200 hover:bg-purple-100">
+                            <td class="px-6 py-4">
+                                {{ $posts->firstItem() + $key }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $post->title }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $post->user->name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $post->category->name }}
+                            </td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <a href="/posts/{{ $post->id }}"
+                                    class="text-yellow-400 bg-purple-800 hover:bg-white hover:ring hover-ring-purple-800 hover:text-purple-800 rounded-lg px-5 py-2.5"><i
+                                        data-feather="eye" class="size-[1rem]"></i></a>
+                                <a href="/posts/{{ $post->id }}/edit"
+                                    class="text-black bg-yellow-400 hover:bg-yellow-300 rounded-lg px-5 py-2.5"><i
+                                        data-feather="edit" class="size-[1rem]"></i></a>
+                                <form class="inline" method="post" action="/posts/{{ $post->id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-white bg-red-500 hover:bg-red-600 rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
+                                        onclick="return confirm('Apakah anda yakin ingin menghapus postingan ini?')">
+                                        <i data-feather="trash-2" class="size-[1rem]"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
 
-        </table>
+                </tbody>
+                {{-- Akhir dari body table --}}
+            </table>
+            {{ $posts->links() }}
+        </div>
     </div>
 </x-dashboard.dashboard>

@@ -4,7 +4,7 @@
         <form action="/users/{{ $user->id }}" method="post">
             @csrf
             @method('PUT')
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div class="flex flex-col gap-y-2">
                     <label for="name">Nama : </label>
                     <input type="text" name="name" id="name" placeholder="Input Your Name" value="{{ $user->name }}"
@@ -31,20 +31,6 @@
                     @error('username')
                         <small class="text-red-400"> {{ $message }} </small>
                     @enderror
-                </div>
-                <div class="flex flex-col gap-y-2">
-                    <label for="passwordUser">Password : </label>
-                    <input type="password" name="password" id="passwordUser" placeholder="Input your new password"
-                        class="bg-purple-50 h-[2.3rem] w-full p-2 rounded-lg border-gray-200 border border-solid shadow-md  @error('password') border-red-400
-                        @enderror">
-                    @error('password')
-                        <small class="text-red-400"> {{ $message }} </small>
-                    @enderror
-                    <div class="flex items-center gap-x-3">
-                        <input type="checkbox" name="cekEditPassword" id="cekEditPassword"
-                            onclick="disableInputPassword()" value="ok">
-                        <span>Edit Password?</span>
-                    </div>
                 </div>
             </div>
             <hr class="text-gray-200 mb-4">
