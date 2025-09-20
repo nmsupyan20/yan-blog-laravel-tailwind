@@ -39,6 +39,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="/posts"
+                            class="flex items-center gap-x-2 w-full py-2 px-3 text-yellow-400 rounded-sm hover:bg-yellow-400 hover:text-purple-800 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0">
+                            <i data-feather="home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="/settings"
                             class="flex items-center w-full gap-x-2 py-2 px-3 text-yellow-400 rounded-sm hover:bg-yellow-400 hover:text-purple-800 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0">
                             <i data-feather="settings"></i>

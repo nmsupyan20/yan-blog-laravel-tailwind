@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 75);
             $table->string('email', 50)->unique();
             $table->string('username', 50)->unique();
+            $table->enum('roles', ['owner', 'admin', 'blogger'])->default('blogger');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -26,7 +26,7 @@ Route::controller(AuthController::class)->group(function () {
 
 
 // Route untuk handle category
-Route::prefix('categories')->middleware('auth')->controller(CategoryController::class)->group(function () {
+Route::prefix('categories')->middleware(['auth'])->controller(CategoryController::class)->group(function () {
     Route::get('/', 'index')->name('categories');
     Route::get('/create', 'create')->name('categories.create');
     Route::post('/', 'store')->name('categories.store');
@@ -49,7 +49,7 @@ Route::prefix('posts')->middleware('auth')->controller(PostController::class)->g
 
 
 // Route untuk handle users
-Route::prefix('users')->middleware('auth')->controller(UserController::class)->group(function () {
+Route::prefix('users')->middleware(['auth'])->controller(UserController::class)->group(function () {
     Route::get('/', 'index')->name('users');
     Route::get('/create', 'create')->name('users.create');
     Route::post('/', 'store')->name('users.store');
@@ -63,4 +63,6 @@ Route::prefix('users')->middleware('auth')->controller(UserController::class)->g
 
 Route::prefix('settings')->middleware('auth')->controller(SettingController::class)->group(function () {
     Route::get('/', 'index');
+    Route::get('/profile', 'edit');
+    Route::put('/update-profile', 'update');
 });
